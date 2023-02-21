@@ -2,6 +2,8 @@
 using HybridWar;
 using System.ComponentModel.Design;
 using System.Linq.Expressions;
+using System.Runtime.Intrinsics.X86;
+using System.Security.Principal;
 
 Console.WriteLine("Hello, World!");
 
@@ -18,8 +20,12 @@ var nuclearWar = false;
 var terranIdeology = GovernmentGenerator.GetRandomValue<Ideology>();
 var terranStructure = GovernmentGenerator.GetRandomValue<Structure>();
 
+var alienSpecies = GovernmentGenerator.GetRandomValue<Alien>();
+
 var govPrefix = "";
 var govType = "";
+
+var alienName = "";
 void UpdatePlayerStats()
 {
     switch (terranIdeology)
@@ -143,6 +149,41 @@ void UpdatePlayerStats()
     Console.ReadLine();
 
     Console.Clear();
+}
+
+void GenerateAlienDescriptions()
+{
+    switch (alienSpecies)
+    {
+        case Alien.Transcendents:
+            Console.WriteLine("Transcendents");
+            Console.WriteLine("An advanced, alturistic alien civilization that has achieved a higher level of consciousness or understanding of the universe.");
+            Console.WriteLine("The aliens describe themselves as the custodians of the universe, tasked with promoting progress and understanding wherever they can.");
+            Console.WriteLine("They see humanity as a primitive species that is need of guidance and enlightenment. While guidance and enlightenment may be");
+            Console.WriteLine("nice in theory, we do not know the values of these Transcendents, or the nature of their knowledge. They may have");
+            Console.WriteLine("ulterior motives for their actions, destabilize the existing power structure, threaten our way of life, and ");
+            Console.WriteLine("");
+            Console.WriteLine("If we want to be enlightened, we must pursue it on our own.");
+            Console.WriteLine("We are a species that do not trust gods.");
+            alienName = "Transcendents";
+            break;
+        case Alien.Coalition:
+            Console.WriteLine("Coalition");
+            Console.WriteLine("This is a group of alien races that are connected by a vast interstellar network of trade and cultural exchange.");
+            Console.WriteLine("They have a relentless focus on commerce and cultural exchange, while retaining deep respect of tradition and history of its");
+            Console.WriteLine("member species. They are wary of humanity and may see them as a potential threat to their own power and security.");
+            Console.WriteLine("Humanity must be deterred to ensure the survival of the Coalition.");
+            alienName = "Coalition";
+            break;
+        case Alien.Pioneers:
+            Console.WriteLine("Pioneers");
+            Console.WriteLine("This is a federation of several alien species that prioritize exploration and the acquisition of knowledge.");
+            Console.WriteLine("They are driven by a sense of adventure and discovery, and value individual freedom and innovation.");
+            Console.WriteLine("They are welcoming to other civilizations and value individual freedom, but also have a strong sense of national pride and identity");
+            Console.WriteLine("They view humans as a potential resource to be assimilated or destroyed.");
+            alienName = "Pioneers";
+            break;
+    }
 }
 
 
@@ -400,8 +441,14 @@ void EnemyCauseCrisis()
 }
 
 UpdatePlayerStats();
+Console.Clear();
+GenerateAlienDescriptions();
 
-Console.WriteLine("One day, the Insects attacked, with the singular purpose of destroying humanity.");
+Console.ReadLine();
+
+Console.Clear();
+
+Console.WriteLine($"One day, the {alienName} attacked, with the singular purpose of conquering humanity.");
 Console.WriteLine("Will they succeed?");
 
 while (!GameEnds() && !nuclearWar)

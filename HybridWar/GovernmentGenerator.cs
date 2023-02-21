@@ -20,6 +20,13 @@
         Republic,
     }
 
+    public enum Alien
+    {
+        Coalition,
+        Pioneers,
+        Transcendents
+    }
+
     public static class GovernmentGenerator
     {
         public static T GetRandomValue<T>()
