@@ -20,15 +20,6 @@
         Republic,
     }
 
-    public enum Electorate
-    {
-        All_Humans,
-        Limited_To_Military,
-        One_Person,
-        None,
-        Singleton
-    }
-
     public static class GovernmentGenerator
     {
         public static T GetRandomValue<T>()
