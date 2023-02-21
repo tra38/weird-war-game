@@ -120,7 +120,7 @@ void UpdatePlayerStats()
             break;
         case Structure.Republic:
             Console.WriteLine("The government allows all its people to participate in governance, allowing them to engage in");
-            Console.WriteLine("endless debates to decide on the best course of action. Though the deabtes leads to a lack of social");
+            Console.WriteLine("endless debates to decide on the best course of action. Though the debates leads to a lack of social");
             Console.WriteLine("cohesion, it also encourages technological innovation.");
             social_cohesion -= 1;
             technology += 2;
