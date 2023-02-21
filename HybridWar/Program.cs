@@ -26,7 +26,7 @@ void UpdatePlayerStats()
     {
         case Ideology.Pious:
             Console.WriteLine("Traditional religions have unified humanity for millennia, so it is natural that humans would turn to it in times of");
-            Console.WriteLine("peirl. Pious ideology emphasizes religion and moral values over other traits, and may");
+            Console.WriteLine("peril. Pious ideology emphasizes religion and moral values over other traits, and may");
             Console.WriteLine("prioritize military hard power to defend its religious beliefs.");
             Console.WriteLine("A side that adopts a theocratic ideology could see a boost in military hard power and");
             Console.WriteLine("cultural soft power, but may struggle with technology and social cohesion due to a focus on religious orthodoxy.");
