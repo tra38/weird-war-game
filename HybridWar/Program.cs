@@ -1,4 +1,8 @@
 ﻿// See https://aka.ms/new-console-template for more information
+
+//"Sacred Defense Is Barbaric Aggression"
+//https://globalaffairs-ru.translate.goog/articles/ih-varvarskaya-agressiya/?_x_tr_sl=ru&_x_tr_tl=en&_x_tr_hl=en&_x_tr_pto=wapp
+
 using HybridWar;
 using System.ComponentModel.Design;
 using System.Linq.Expressions;
@@ -153,6 +157,9 @@ void UpdatePlayerStats()
 
 void GenerateAlienDescriptions()
 {
+    Console.WriteLine("One day, we encountered self-replicating spacecraft, remenants of an ancient alien civilization that had destroyed themselves.");
+    Console.WriteLine("We established contact with these self-replicating spacecraft - and this is what we learnt about them.");
+    Console.WriteLine();
     switch (alienSpecies)
     {
         case Alien.Transcendents:
