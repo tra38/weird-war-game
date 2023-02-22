@@ -52,7 +52,7 @@ void UpdatePlayerStats()
 {
     switch (terranIdeology)
     {
-        //fix the piety
+        //fix the piety issue.
         case Ideology.Pious:
             Console.WriteLine("Traditional religions have unified humanity for millennia, so it is natural that humans would turn to it in times of");
             Console.WriteLine("peril. Pious ideology emphasizes religion and moral values over other traits, and may");
@@ -102,7 +102,8 @@ void UpdatePlayerStats()
             social_cohesion -= 2;
             govPrefix = "Libertarian";
             break;
-        //need a better name (tried Transhumanist, tried Humanist, clearly Paperclip doesn't work. Ugh.)
+        //need a better name (tried Transhumanist, tried Humanist, clearly Paperclip doesn't work. Ugh. AGI, perhaps?)
+        //(It needs to be something that empahsizes military hard power over cultural soft power and social cohesion.)
         case Ideology.Paperclip:
             Console.WriteLine("A 'Paperclip' society emphasizes a single metric that must be optimized by society at all costs.");
             Console.WriteLine("Due to that emphasis, Paperclip societies endorse the unity and solidarity of all humans");
