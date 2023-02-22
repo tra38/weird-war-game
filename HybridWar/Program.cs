@@ -11,6 +11,22 @@ using System.Security.Principal;
 
 Console.WriteLine("Hello, World!");
 
+Console.WriteLine("There is only one decision-maker of Terra. YOU. You contorl the lives of everyone else.");
+Console.WriteLine("Everyone follows your orders.");
+Console.WriteLine();
+Console.WriteLine("I say this because your predecessors fought hard to establish this society.");
+Console.WriteLine("They genuinely believed it would be best for the world.");
+Console.WriteLine("...that diversity and free thinking would threaten humanity itself.");
+Console.WriteLine("That everything must be purged.");
+
+Console.ReadLine();
+
+Console.WriteLine("So don't mess up.");
+
+Console.ReadLine();
+
+Console.Clear();
+
 var turnCounter = 1;
 
 //stats
@@ -24,7 +40,9 @@ var nuclearWar = false;
 var terranIdeology = GovernmentGenerator.GetRandomValue<Ideology>();
 var terranStructure = GovernmentGenerator.GetRandomValue<Structure>();
 
-var alienSpecies = GovernmentGenerator.GetRandomValue<Alien>();
+//var alienSpecies = GovernmentGenerator.GetRandomValue<Alien>();
+
+var alienSpecies = Alien.Transcendents;
 
 var govPrefix = "";
 var govType = "";
@@ -34,6 +52,7 @@ void UpdatePlayerStats()
 {
     switch (terranIdeology)
     {
+        //fix the piety
         case Ideology.Pious:
             Console.WriteLine("Traditional religions have unified humanity for millennia, so it is natural that humans would turn to it in times of");
             Console.WriteLine("peril. Pious ideology emphasizes religion and moral values over other traits, and may");
@@ -44,7 +63,7 @@ void UpdatePlayerStats()
             cultural_soft_power += 1;
             social_cohesion -= 1;
             technology -= 1;
-            govPrefix = "Theocratic";
+            govPrefix = "God's";
             break;
         case Ideology.Environmentalist:
             Console.WriteLine("An environmentalist ideology prioritizes cultural soft power and environmental sustainability");
@@ -83,16 +102,19 @@ void UpdatePlayerStats()
             social_cohesion -= 2;
             govPrefix = "Libertarian";
             break;
-        case Ideology.Humanist:
-            Console.WriteLine("Humanism emphasizes the unity and solidarity of all humans");
+        //need a better name (tried Transhumanist, tried Humanist, clearly Paperclip doesn't work. Ugh.)
+        case Ideology.Paperclip:
+            Console.WriteLine("A 'Paperclip' society emphasizes a single metric that must be optimized by society at all costs.");
+            Console.WriteLine("Due to that emphasis, Paperclip societies endorse the unity and solidarity of all humans");
             Console.WriteLine("under a single a shared identity and culture, and view those seeking to disrupt this shared identity and culture");
-            Console.WriteLine("as a threat to the unity of Terra. They emphasize a strong military over other traits. While their military hard");
+            Console.WriteLine("as a threat to the unity of Terra. After all, any value devaition threaten the primary directive");
+            Console.WriteLine("that humanity was designed to do in the first place. They emphasize a strong military over other traits. While their military hard");
             Console.WriteLine("power is admirable, they suffer in other areas like social cohesion and cultural soft power due to an emphasis on");
             Console.WriteLine("a narrow definition of species unity.");
             military_hard_power += 2;
             cultural_soft_power -= 1;
             social_cohesion -= 1;
-            govPrefix = "Humanist";
+            govPrefix = "Paperclip";
             break;
         default:
             throw new Exception();
@@ -168,8 +190,10 @@ void GenerateAlienDescriptions()
             Console.WriteLine("The aliens describe themselves as the custodians of the universe, tasked with promoting progress and understanding wherever they can.");
             Console.WriteLine("They see humanity as a primitive species that is need of guidance and enlightenment. While guidance and enlightenment may be");
             Console.WriteLine("nice in theory, we do not know the values of these Transcendents, or the nature of their knowledge. They may have");
-            Console.WriteLine("ulterior motives for their actions, destabilize the existing power structure, threaten our way of life, and ");
+            Console.WriteLine("ulterior motives for their actions, destabilize the existing power structure, threaten our way of life.");
             Console.WriteLine("");
+            Console.WriteLine("For all we know, they merely want to turn us into paperclips.");
+            Console.ReadLine();
             Console.WriteLine("If we want to be enlightened, we must pursue it on our own.");
             Console.WriteLine("We are a species that do not trust gods.");
             alienName = "Transcendents";
