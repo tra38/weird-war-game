@@ -41,6 +41,7 @@ var defaultCostToSurrender = 25;
 var costToSurrender = 25;
 
 var terranIdeology = GovernmentGenerator.GetRandomValue<Ideology>();
+//var terranIdeology = Ideology.Socialist; ---socialism is overpowered, because it allows you to surrender with little cost! Need to nerf!
 var terranStructure = GovernmentGenerator.GetRandomValue<Structure>();
 
 //var alienSpecies = GovernmentGenerator.GetRandomValue<Alien>();
@@ -227,11 +228,11 @@ void GenerateStatInfo(string fluff, string actualStatName, int defaultValue, int
 {
     if (defaultValue < currentValue)
     {
-        Console.WriteLine($"Due to your superior {fluff}, you are able to increase your {actualStatName} from {defaultEconomicBlockade} to {economicBlockade}!");
+        Console.WriteLine($"Due to your superior {fluff}, you are able to increase your {actualStatName} from {defaultValue} to {currentValue}!");
     }
     else if (defaultValue > currentValue)
     {
-        Console.WriteLine($"Due to your inferior {fluff}, your {actualStatName} is reduced from {defaultEconomicBlockade} to {economicBlockade}.");
+        Console.WriteLine($"Due to your inferior {fluff}, your {actualStatName} is reduced from {defaultValue} to {currentValue}.");
     }
     else
     {
