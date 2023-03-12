@@ -5,19 +5,15 @@
 
 using HybridWar;
 
-Console.WriteLine("Hello, World!");
+Console.WriteLine("'Our sacred defense is their barbaric aggression.'--President Zhu Huang, Terra");
 
-Console.WriteLine("There is only one decision-maker of Terra. YOU. You contorl the lives of everyone else.");
-Console.WriteLine("Everyone follows your orders.");
+Console.WriteLine("Fifty years after the unification of Terra under President Zhu Huang, the Transcendants arrived.");
+Console.WriteLine("They offer enlightenment. We refuse. We now wage a war against these aliens, for our very survival.");
+Console.WriteLine("Yet, how do we wage such a war? Especially when it could lead to extiniction to both our sides?");
 Console.WriteLine();
-Console.WriteLine("I say this because your predecessors fought hard to establish this society.");
-Console.WriteLine("They genuinely believed it would be best for the world.");
-Console.WriteLine("...that diversity and free thinking would threaten humanity itself.");
-Console.WriteLine("That everything must be purged.");
 
-Console.ReadLine();
-
-Console.WriteLine("So don't mess up.");
+Console.WriteLine("Do we fight, trying to drag humanity to the brink of extiniction? Or do we negotiate,");
+Console.WriteLine("in an attempt to come to a solution we would both be comfortable with?");
 
 Console.ReadLine();
 
@@ -346,7 +342,7 @@ while (CrisisContinues(enemySurrendered, youSurrendered))
     Console.WriteLine($"Turn #{turnCounter}");
     Console.WriteLine($"Chances of Nuclear War {currentProbablity}%");
     Console.WriteLine();
-    Console.WriteLine($"Options for the {govPrefix} {govType}:");
+    Console.WriteLine($"Options for the {govPrefix} {govType} of Terra:");
     Console.WriteLine($"(A) Surrender: Lose {costToSurrender} points.");
     
     if (costToSurrender <= 5)
