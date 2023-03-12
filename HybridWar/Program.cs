@@ -56,7 +56,6 @@ void UpdatePlayerStats()
 {
     switch (terranIdeology)
     {
-        //fix the piety issue.
         case Ideology.Pious:
             Console.WriteLine("Traditional religions have unified humanity for millennia, so it is natural that humans would turn to it in times of");
             Console.WriteLine("peril. Pious ideology emphasizes religion and moral values over other traits, and may");
@@ -67,7 +66,7 @@ void UpdatePlayerStats()
             Console.WriteLine("");
             generalWeaponsEffectiveness += 10;
             negotiationOdds += 10;
-            costToSurrender += 10;
+            costToSurrender += 5;
             economicBlockade -= 10;
             govPrefix = "Divine";
             break;
@@ -84,7 +83,7 @@ void UpdatePlayerStats()
             Console.WriteLine("importance of military hard power. A side that adopts a socialist ideology could see a boost in social cohesion,");
             Console.WriteLine("but may struggle with technology and military hard power due to a lack of emphasis on individual innovation");
             Console.WriteLine("and competition.");
-            costToSurrender -= 20;
+            costToSurrender -= 10;
             economicBlockade -= 10;
             generalWeaponsEffectiveness -= 10;
             govPrefix = "Workers'";
@@ -94,7 +93,7 @@ void UpdatePlayerStats()
             Console.WriteLine("and they view technical expertise as the most important qualification for leadership positions. A side that adopts a technocratic");
             Console.WriteLine("ideology might see a boost in technology, but will downplay the importance of social cohesion and cultural soft power.");
             economicBlockade += 20;
-            costToSurrender += 10;
+            costToSurrender += 5;
             negotiationOdds -= 10;
             govPrefix = "Technocratic";
             break;
@@ -105,23 +104,21 @@ void UpdatePlayerStats()
             Console.WriteLine("being left behind by the pursuit of wealth and economic growth at the expense");
             Console.WriteLine("of other values and priorities.");
             economicBlockade += 20;
-            costToSurrender += 20;
+            costToSurrender += 10;
             govPrefix = "Libertarian";
             break;
-        //need a better name (tried Transhumanist, tried Humanist, clearly Paperclip doesn't work. Ugh. AGI, perhaps?)
-        //(It needs to be something that empahsizes military hard power over cultural soft power and social cohesion.)
-        case Ideology.Paperclip:
-            Console.WriteLine("A 'Paperclip' society emphasizes a single metric that must be optimized by society at all costs.");
-            Console.WriteLine("Due to that emphasis, Paperclip societies endorse the unity and solidarity of all humans");
-            Console.WriteLine("under a single a shared identity and culture, and view those seeking to disrupt this shared identity and culture");
-            Console.WriteLine("as a threat to the unity of Terra. After all, any value devaition threaten the primary directive");
-            Console.WriteLine("that humanity was designed to do in the first place. They emphasize a strong military over other traits. While their military hard");
+        case Ideology.EliteLiberal:
+            Console.WriteLine("Elite Liberalism, as defined by the Liberal Crime Squad, emphasizes a single metric (Liberalism) that must");
+            Console.WriteLine("be optimized by society at all costs. Due to that emphasis, Elite Liberal societies endorse the unity and solidarity");
+            Console.WriteLine("of all humans, under a single a shared identity and culture, and view those seeking to disrupt this shared identity");
+            Console.WriteLine("and culture as a threat to the unity of Terra. All such deviations are Arch-Conservative rhetoric, threatening humanity's");
+            Console.WriteLine("purpose in life. Elite Liberal societies emphasize a strong military over other traits. While their military hard");
             Console.WriteLine("power is admirable, they suffer in other areas like social cohesion and cultural soft power due to an emphasis on");
             Console.WriteLine("a narrow definition of species unity.");
             generalWeaponsEffectiveness += 20;
-            costToSurrender += 10;
+            costToSurrender += 5;
             negotiationOdds += 10;
-            govPrefix = "Paperclip";
+            govPrefix = "Elite Liberal";
             break;
         default:
             throw new Exception();
@@ -140,7 +137,7 @@ void UpdatePlayerStats()
         case Structure.Federation:
             Console.WriteLine("A federation is a government made up of several smaller states or regions, each with a certain degree of autonomy.");
             Console.WriteLine("They prioritize social cohesion, as they emphasize cooperation and diplomacy between member states.");
-            costToSurrender -= 10;
+            costToSurrender -= 5;
             govType = "Federation";
             break;
         case Structure.Hivemind:
@@ -162,7 +159,7 @@ void UpdatePlayerStats()
             Console.WriteLine("endless debates to decide on the best course of action. Though the debates leads to a lack of social");
             Console.WriteLine("cohesion, it also encourages technological innovation.");
             economicBlockade += 20;
-            costToSurrender += 10;
+            costToSurrender += 5;
             govType = "Republic";
             break;
         case Structure.Empire:
@@ -289,7 +286,7 @@ bool enemySurrendered = false;
 
 var victoryVPs = 0; //relative power indicates that if you don't get to surrender, you still win overall.
 
-var hardlinerProbablity = RandomNumber(1, 100, randomGenerator);
+var hardlinerProbablity = RandomNumber(50, 70, randomGenerator);
 
 int currentProbablity = 0;
 
@@ -361,12 +358,9 @@ while (CrisisContinues(enemySurrendered, youSurrendered))
     {
         Console.WriteLine($"(B) Negotiate A Favorable Settlement (Escalation Risk: Low, Success: {negotiationOdds}%), reducing the costs to surrender by 5 points.");
     }
-    Console.WriteLine($"(C) Economic Embargo (Escalation Risk: Low, +{economicBlockade}% to Sucker Punch).");
-    Console.WriteLine($"(D) Tactical Nuclear Weapons (Escalation Risk: Medium, +{tacticalWeaponsBonus}% to Sucker Punch, Lose 5 Points)");
-    Console.WriteLine($"(E) Strategic Nuclear Weapons (Escalation Risk: High, +{strategicWeaponsBonus}% to Sucker Punch, Lose 10 Points)");
-    Console.WriteLine($"(F) Activate Sterialization Procedures (Escalation Risk: 100%, Lose 20 Points!)");
-    Console.WriteLine("(G) Wage Conventional War (60% chance of eroding enemy's will, 40% chance of doing nothing");
-    Console.WriteLine("(H) Bribe the enemy (Lose 2 Points, erode enemy's will)");
+    Console.WriteLine($"(C) Unconventional Warfare (Increases probablity of nuclear war by {economicBlockade}%, no VP loss)");
+    Console.WriteLine($"(D) Tactical Nuclear Weapons (Increases probablity of nuclear war by {tacticalWeaponsBonus}%, lose 5 VP)");
+    Console.WriteLine($"(E) Strategic Nuclear Weapons (Increases probablity of nuclear war by {strategicWeaponsBonus}%), lose 10 VP)");
 
     var data = Console.ReadLine();
 
@@ -434,7 +428,7 @@ while (CrisisContinues(enemySurrendered, youSurrendered))
 
             currentProbablity += enemyEscalates;
 
-            Console.WriteLine($"Enemy chooses to escalate by #{enemyEscalates}%.");
+            Console.WriteLine($"Enemy chooses to escalate by {enemyEscalates}%.");
 
             if (WillSuckerPunchTrigger(currentProbablity, randomGenerator))
             {
@@ -468,7 +462,7 @@ while (CrisisContinues(enemySurrendered, youSurrendered))
 
             currentProbablity += enemyEscalates;
 
-            Console.WriteLine($"Enemy chooses to escalate by #{enemyEscalates}%.");
+            Console.WriteLine($"Enemy chooses to escalate by {enemyEscalates}%.");
 
             if (WillSuckerPunchTrigger(currentProbablity, randomGenerator))
             {
@@ -512,57 +506,6 @@ while (CrisisContinues(enemySurrendered, youSurrendered))
                 youSurrendered = true;
             }
         }
-    }
-    else if (data == "F")
-    {
-        var success = WillEnemySurrender(hardlinerProbablity, 100, randomGenerator);
-        totalPoints -= 20;
-        if (success)
-        {
-            Console.WriteLine("The enemy buckles under pressure and disbands.");
-            totalPoints += victoryVPs;
-            enemySurrendered = true;
-        }
-        else
-        {
-            Console.WriteLine("...");
-            enemySurrendered = true;
-            youSurrendered = true;
-        }
-    }
-    else if (data == "G")
-    {
-        var success = WillEnemyNegotiate(negotiationOdds, randomGenerator);
-
-        if (success)
-        {
-            Console.WriteLine("Enemy will has been eroded by 5%");
-            hardlinerProbablity -= 5;
-        }
-        else
-        {
-            Console.WriteLine("Enemy will has not been eroded, sadly");
-        }
-
-
-        var enemyEscalates = EnemyEscalates(randomGenerator);
-
-        currentProbablity += enemyEscalates;
-
-        Console.WriteLine("Enemy engages in aggressive actions to 'persuade' you to accept peace.");
-        Console.WriteLine($"Enemy chooses to escalate by {enemyEscalates}%.");
-    }
-    else if (data == "H")
-    {
-        hardlinerProbablity -= 5;
-        Console.WriteLine("Enemy will has been eroded by 5%");
-
-        var enemyEscalates = EnemyEscalates(randomGenerator);
-
-        currentProbablity += enemyEscalates;
-
-        Console.WriteLine("Enemy engages in aggressive actions to 'persuade' you to accept peace.");
-        Console.WriteLine($"Enemy chooses to escalate by {enemyEscalates}%.");
     }
     else
     {

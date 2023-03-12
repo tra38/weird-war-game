@@ -7,7 +7,7 @@
         Environmentalist,
         Technocratic,
         Pious,
-        Paperclip
+        EliteLiberal
     }
 
     public enum Structure
