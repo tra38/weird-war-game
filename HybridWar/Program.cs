@@ -41,7 +41,6 @@ var defaultCostToSurrender = 25;
 var costToSurrender = 25;
 
 var terranIdeology = GovernmentGenerator.GetRandomValue<Ideology>();
-//var terranIdeology = Ideology.Socialist; ---socialism is overpowered, because it allows you to surrender with little cost! Need to nerf!
 var terranStructure = GovernmentGenerator.GetRandomValue<Structure>();
 
 //var alienSpecies = GovernmentGenerator.GetRandomValue<Alien>();
@@ -78,7 +77,7 @@ void UpdatePlayerStats()
             negotiationOdds += 20;
             govPrefix = "Ecologist";
             break;
-        case Ideology.Socialist: //Socialism is overpowered, FIX! If you are a socialist, it's easier to just surrender than to fight!
+        case Ideology.Socialist:
             Console.WriteLine("Socialist ideology prioritizes social cohesion and equality over other traits, and may downplay the");
             Console.WriteLine("importance of military hard power. A side that adopts a socialist ideology could see a boost in social cohesion,");
             Console.WriteLine("but may struggle with technology and military hard power due to a lack of emphasis on individual innovation");
