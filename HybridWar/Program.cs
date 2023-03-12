@@ -26,14 +26,18 @@ Console.Clear();
 var turnCounter = 1;
 
 //stats
-
+var defaultEconomicBlockade = 10;
 var economicBlockade = 10;
 
+var defaultgeneralWeaponsEffectiveness = 10;
 var generalWeaponsEffectiveness = 10;
 var tacticalWeaponsBonus = 20;
 var strategicWeaponsBonus = 40;
 
+var defaultNegotiationOdds = 60;
 var negotiationOdds = 60;
+
+var defaultCostToSurrender = 25;
 var costToSurrender = 25;
 
 var terranIdeology = GovernmentGenerator.GetRandomValue<Ideology>();
@@ -58,6 +62,8 @@ void UpdatePlayerStats()
             Console.WriteLine("prioritize military hard power to defend its religious beliefs.");
             Console.WriteLine("A side that adopts a theocratic ideology could see a boost in military hard power and");
             Console.WriteLine("cultural soft power, but may struggle with technology and social cohesion due to a focus on religious orthodoxy.");
+            Console.ReadLine();
+            Console.WriteLine("");
             generalWeaponsEffectiveness += 10;
             negotiationOdds += 10;
             costToSurrender += 10;
@@ -217,6 +223,37 @@ void GenerateAlienDescriptions()
     }
 }
 
+void GenerateStatInfo(string fluff, string actualStatName, int defaultValue, int currentValue)
+{
+    if (defaultValue < currentValue)
+    {
+        Console.WriteLine($"Due to your superior {fluff}, you are able to increase your {actualStatName} from {defaultEconomicBlockade} to {economicBlockade}!");
+    }
+    else if (defaultValue > currentValue)
+    {
+        Console.WriteLine($"Due to your inferior {fluff}, your {actualStatName} is reduced from {defaultEconomicBlockade} to {economicBlockade}.");
+    }
+    else
+    {
+        Console.WriteLine($"Your {fluff} is average, so your {actualStatName} stays at {defaultEconomicBlockade}.");
+    }
+}
+
+void GenerateSurrenderCostReduction(int defaultValue, int currentValue)
+{
+    if (defaultValue > currentValue)
+    {
+        Console.WriteLine($"Due to your superior social cohesion, your society is able to handle all situations gracefully - even losses. You are able to reduce the cost of surrender from {defaultValue} to {currentValue}!");
+    }
+    else if (defaultValue < currentValue)
+    {
+        Console.WriteLine($"Due to your inferior social cohesion, your society is very brittle and will likely collapse at the first sign of defat. Therefore, the cost of surrender has increased from {defaultValue} to {currentValue}.");
+    }
+    else
+    {
+        Console.WriteLine($"Your socail cohesion is average, so your cost of surrender stays at {defaultValue}.");
+    }
+}
 
 UpdatePlayerStats();
 Console.Clear();
@@ -227,8 +264,12 @@ Console.ReadLine();
 Console.Clear();
 
 Console.WriteLine($"One day, the {alienName} attacked, with the singular purpose of conquering humanity.");
-Console.WriteLine("Will they succeed?");
+GenerateStatInfo("technology", "economic blockade strength", defaultEconomicBlockade, economicBlockade);
+GenerateStatInfo("military hard power", "weapons effectiveness", defaultgeneralWeaponsEffectiveness, generalWeaponsEffectiveness);
+GenerateStatInfo("cultural soft power", "diplomatic odds", defaultNegotiationOdds, negotiationOdds);
+GenerateSurrenderCostReduction(defaultCostToSurrender, costToSurrender);
 
+Console.ReadLine();
 
 var randomGenerator = new Random();
 
@@ -307,12 +348,13 @@ while (CrisisContinues(enemySurrendered, youSurrendered))
     Console.WriteLine($"Current VPs: {totalPoints}");
     Console.WriteLine($"Turn #{turnCounter}");
     Console.WriteLine($"Chances of Nuclear War {currentProbablity}%");
-    Console.WriteLine("Options:");
+    Console.WriteLine();
+    Console.WriteLine($"Options for the {govPrefix} {govType}:");
     Console.WriteLine($"(A) Surrender: Lose {costToSurrender} points.");
     
     if (costToSurrender <= 5)
     {
-        Console.WriteLine("(The enemy no longer wishes to negotiate with you. They have made their demands clear and have compromised their ideals to accomdate your society. Accept or else.)");
+        Console.WriteLine($"(The {alienName} no longer wishes to negotiate with you. They have made their demands clear and have compromised their ideals to accomdate your society. Accept or else.)");
     }
     else
     {
@@ -329,7 +371,7 @@ while (CrisisContinues(enemySurrendered, youSurrendered))
 
     if (data == "A")
     {
-        Console.WriteLine("The war is over! You have abdicated and allow ■■■■■■■■■ to take power.");
+        Console.WriteLine($"The war is over! You have abdicated and allowed the {alienName} to take power.");
         totalPoints -= costToSurrender;
         youSurrendered = true;
     }
