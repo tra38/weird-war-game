@@ -79,7 +79,7 @@ void UpdatePlayerStats()
             negotiationOdds += 20;
             govPrefix = "Ecologist";
             break;
-        case Ideology.Socialist:
+        case Ideology.Socialist: //Socialism is overpowered, FIX! If you are a socialist, it's easier to just surrender than to fight!
             Console.WriteLine("Socialist ideology prioritizes social cohesion and equality over other traits, and may downplay the");
             Console.WriteLine("importance of military hard power. A side that adopts a socialist ideology could see a boost in social cohesion,");
             Console.WriteLine("but may struggle with technology and military hard power due to a lack of emphasis on individual innovation");
