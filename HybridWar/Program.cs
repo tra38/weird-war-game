@@ -68,7 +68,7 @@ void UpdatePlayerStats()
             negotiationOdds += 10;
             costToSurrender += 10;
             economicBlockade -= 10;
-            govPrefix = "God's";
+            govPrefix = "Divine";
             break;
         case Ideology.Environmentalist:
             Console.WriteLine("An environmentalist ideology prioritizes cultural soft power and environmental sustainability");
