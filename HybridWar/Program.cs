@@ -342,108 +342,74 @@ static int EnemyEscalates(Random random)
 
 while (CrisisContinues(enemySurrendered, youSurrendered))
 {
-    turnCounter += 1;
-    Console.WriteLine($"Enemy Tolerance: {hardlinerProbablity}%");
-
-    Console.WriteLine();
-
-    Console.WriteLine($"Current VPs: {totalPoints}");
-    Console.WriteLine($"Turn #{turnCounter}");
-    Console.WriteLine($"Chances of Nuclear War {currentProbablity}%");
-    Console.WriteLine();
-    Console.WriteLine($"Options for the {govPrefix} {govType} of Terra:");
-    Console.WriteLine($"(A) Surrender: Lose {costToSurrender} points.");
-    
-    if (costToSurrender <= 5)
+    if (WillEnemySurrender(hardlinerProbablity, currentProbablity, randomGenerator))
     {
-        Console.WriteLine($"(The {alienName} no longer wishes to negotiate with you. They have made their demands clear and have compromised their ideals to accomdate your society. Accept or else.)");
+        Console.WriteLine("The enemy finally gives up! The percentage chance of nuclear war is too high!");
     }
     else
     {
-        Console.WriteLine($"(B) Negotiate A Favorable Settlement (Success: {negotiationOdds}%), reducing the costs to surrender by 5 points.");
-    }
-    Console.WriteLine($"(C) Unconventional Warfare (Chance of Immediate Enemy Surrender: {(economicBlockade/4)}%. Increases probablity of nuclear war by {economicBlockade}%. No VP loss)");
-    Console.WriteLine($"(D) Tactical Nuclear Weapons (Chance of Immediate Enemy Surrender: {(tacticalWeaponsBonus/2)}%. Increases probablity of nuclear war by {tacticalWeaponsBonus}%, lose 5 VP)");
-    Console.WriteLine($"(E) Strategic Nuclear Weapons (Chance of Immediate Enemy Surrender: {strategicWeaponsBonus/2}%. Increases probablity of nuclear war by {strategicWeaponsBonus}%, lose 10 VP)");
-    Console.WriteLine($"(F) Appeasement (reduce enemy tolerance by 5%, lose 5 VP)");
+        Console.WriteLine($"Enemy Tolerance: {hardlinerProbablity}%");
 
-    var data = Console.ReadLine();
+        Console.WriteLine();
 
-    if (data == "A")
-    {
-        Console.WriteLine($"The war is over! You have abdicated and allowed the {alienName} to take power.");
-        totalPoints -= costToSurrender;
-        youSurrendered = true;
-    }
-    else if (data == "B")
-    {
+        Console.WriteLine($"Current VPs: {totalPoints}");
+        Console.WriteLine($"Turn #{turnCounter}");
+        Console.WriteLine($"Chances of Nuclear War {currentProbablity}%");
+        Console.WriteLine();
+        Console.WriteLine($"Options for the {govPrefix} {govType} of Terra:");
+        Console.WriteLine($"(A) Surrender: Lose {costToSurrender} points.");
+
         if (costToSurrender <= 5)
         {
-            Console.WriteLine("You send a message to the enemy, but the enemy does not respond");
+            Console.WriteLine($"(The {alienName} no longer wishes to negotiate with you. They have made their demands clear and have compromised their ideals to accomdate your society. Accept or else.)");
         }
         else
         {
-            Console.WriteLine("Diplomats conduct franctic negotiations to try to end the fighting.");
-            var negotiationSuccess = WillEnemyNegotiate(negotiationOdds, randomGenerator);
+            Console.WriteLine($"(B) Negotiate A Favorable Settlement (Success: {negotiationOdds}%), reducing the costs to surrender by 5 points.");
+        }
+        Console.WriteLine($"(C) Unconventional Warfare (Chance of Immediate Enemy Surrender: {(economicBlockade / 4)}%. Increases probablity of nuclear war by {economicBlockade}%. No VP loss)");
+        Console.WriteLine($"(D) Tactical Nuclear Weapons (Chance of Immediate Enemy Surrender: {(tacticalWeaponsBonus / 2)}%. Increases probablity of nuclear war by {tacticalWeaponsBonus}%, lose 5 VP)");
+        Console.WriteLine($"(E) Strategic Nuclear Weapons (Chance of Immediate Enemy Surrender: {strategicWeaponsBonus / 2}%. Increases probablity of nuclear war by {strategicWeaponsBonus}%, lose 10 VP)");
+        Console.WriteLine($"(F) Appeasement (reduce enemy tolerance by 5%, lose 5 VP)");
 
-            if (negotiationSuccess)
+        var data = Console.ReadLine();
+
+        if (data == "A")
+        {
+            Console.WriteLine($"The war is over! You have abdicated and allowed the {alienName} to take power.");
+            totalPoints -= costToSurrender;
+            youSurrendered = true;
+
+            turnCounter += 1;
+        }
+        else if (data == "B")
+        {
+            if (costToSurrender <= 5)
             {
-                Console.WriteLine("Enemy is willing to compromise on key points, providing you a face-saving measure. Victory with honor.");
-                costToSurrender -= 5;
+                Console.WriteLine("You send a message to the enemy, but the enemy does not respond");
             }
-
             else
             {
-                Console.WriteLine("But talks deadlock and nothing happens.");
+                Console.WriteLine("Diplomats conduct franctic negotiations to try to end the fighting.");
+                var negotiationSuccess = WillEnemyNegotiate(negotiationOdds, randomGenerator);
+
+                if (negotiationSuccess)
+                {
+                    Console.WriteLine("Enemy is willing to compromise on key points, providing you a face-saving measure. Victory with honor.");
+                    costToSurrender -= 5;
+                }
+
+                else
+                {
+                    Console.WriteLine("But talks deadlock and nothing happens.");
+                }
             }
-        }
-
-        var enemyEscalates = EnemyEscalates(randomGenerator);
-
-        currentProbablity += enemyEscalates;
-
-        Console.WriteLine("Enemy engages in aggressive actions to 'persuade' you to accept peace on their terms.");
-        Console.WriteLine($"Enemy chooses to escalate by {enemyEscalates}%.");
-
-        if (WillSuckerPunchTrigger(currentProbablity, randomGenerator))
-        {
-            Console.WriteLine("Sucker Punch accidentially triggered! Game ends.");
-            enemySurrendered = true;
-            youSurrendered = true;
-        }
-    }
-    else if (data == "C")
-    {
-        Console.WriteLine("You attempt to hurt their economy through conventional means and economic might.");
-
-        var buckle = WillEnemySurrender(hardlinerProbablity, economicBlockade/4, randomGenerator);
-
-        if (buckle)
-        {
-            Console.WriteLine("It works! The enemy surrenders!");
-        }
-        else
-        {
-            Console.WriteLine("It didn't work. The enemy shrugged off your actions.");
-        }
-
-        currentProbablity += economicBlockade;
-        var success = WillEnemySurrender(hardlinerProbablity, currentProbablity, randomGenerator);
-
-        if (success)
-        {
-            Console.WriteLine("The enemy buckles under pressure and disbands.");
-            totalPoints += victoryVPs;
-            enemySurrendered = true;
-        }
-        else
-        {
-            Console.WriteLine("The enemy steels itself for what is to come.");
 
             var enemyEscalates = EnemyEscalates(randomGenerator);
 
             currentProbablity += enemyEscalates;
 
+            Console.WriteLine("Enemy engages in aggressive actions to 'persuade' you to accept peace on their terms.");
             Console.WriteLine($"Enemy chooses to escalate by {enemyEscalates}%.");
 
             if (WillSuckerPunchTrigger(currentProbablity, randomGenerator))
@@ -452,141 +418,193 @@ while (CrisisContinues(enemySurrendered, youSurrendered))
                 enemySurrendered = true;
                 youSurrendered = true;
             }
+
+            turnCounter += 1;
         }
-    }
-    else if (data == "D")
-    {
-        Console.WriteLine("Tactical nuclear weapons are deployed. Billions are terminated.");
-        Console.WriteLine("Historians will denounce your actions as a war crime (lose 5 points).");
-        Console.WriteLine("But sometimes, you must take desperate measures to ensure victory.");
-        totalPoints -= 5;
-
-
-        var buckle = WillEnemySurrender(hardlinerProbablity, tacticalWeaponsBonus / 2, randomGenerator);
-
-        if (buckle)
+        else if (data == "C")
         {
-            Console.WriteLine("It works! The enemy surrenders!");
-        }
-        else
-        {
-            Console.WriteLine("It didn't work. The enemy shrugged off your actions.");
-        }
+            Console.WriteLine("You attempt to hurt their economy through conventional means and economic might.");
 
+            var buckle = WillEnemySurrender(hardlinerProbablity, economicBlockade / 4, randomGenerator);
 
-        currentProbablity += tacticalWeaponsBonus;
-
-        var success = WillEnemySurrender(hardlinerProbablity, currentProbablity, randomGenerator);
-
-        if (success)
-        {
-            Console.WriteLine("The enemy buckles under pressure and disbands.");
-            totalPoints += victoryVPs;
-            enemySurrendered = true;
-        }
-        else
-        {
-            Console.WriteLine("The enemy steels itself for what is to come.");
-
-            var enemyEscalates = EnemyEscalates(randomGenerator);
-
-            currentProbablity += enemyEscalates;
-
-            Console.WriteLine($"Enemy chooses to escalate by {enemyEscalates}%.");
-
-            if (WillSuckerPunchTrigger(currentProbablity, randomGenerator))
+            if (buckle)
             {
-                Console.WriteLine("Sucker Punch accidentially triggered! Game ends.");
-                enemySurrendered = true;
-                youSurrendered = true;
+                Console.WriteLine("It works! The enemy surrenders!");
             }
-        }
-    }
-
-    else if (data == "E")
-    {
-        Console.WriteLine("Strategic nuclear weapons are deployed. Trillions are terminated.");
-        Console.WriteLine("Historians will denounce your actions as a war crime (lose 10 points).");
-        Console.WriteLine("But sometimes, you must take desperate measures to ensure victory.");
-        totalPoints -= 10;
-
-        var buckle = WillEnemySurrender(hardlinerProbablity, strategicWeaponsBonus / 2, randomGenerator);
-
-        if (buckle)
-        {
-            Console.WriteLine("It works! The enemy surrenders!");
-        }
-        else
-        {
-            Console.WriteLine("It didn't work. The enemy shrugged off your actions.");
-        }
-
-
-        currentProbablity += strategicWeaponsBonus;
-
-        var success = WillEnemySurrender(hardlinerProbablity, currentProbablity, randomGenerator);
-
-        if (success)
-        {
-            Console.WriteLine("The enemy buckles under pressure and disbands.");
-            totalPoints += victoryVPs;
-            enemySurrendered = true;
-        }
-        else
-        {
-            Console.WriteLine("The enemy steels itself for what is to come.");
-
-            var enemyEscalates = EnemyEscalates(randomGenerator);
-
-            currentProbablity += enemyEscalates;
-
-            Console.WriteLine($"Enemy chooses to escalate by #{enemyEscalates}%.");
-
-            if (WillSuckerPunchTrigger(currentProbablity, randomGenerator))
+            else
             {
-                Console.WriteLine("Sucker Punch accidentially triggered! Game ends.");
-                enemySurrendered = true;
-                youSurrendered = true;
+                Console.WriteLine("It didn't work. The enemy shrugged off your actions.");
             }
+
+            currentProbablity += economicBlockade;
+            var success = WillEnemySurrender(hardlinerProbablity, currentProbablity, randomGenerator);
+
+            if (success)
+            {
+                Console.WriteLine("The enemy buckles under pressure and disbands.");
+                totalPoints += victoryVPs;
+                enemySurrendered = true;
+            }
+            else
+            {
+                Console.WriteLine("The enemy steels itself for what is to come.");
+
+                var enemyEscalates = EnemyEscalates(randomGenerator);
+
+                currentProbablity += enemyEscalates;
+
+                Console.WriteLine($"Enemy chooses to escalate by {enemyEscalates}%.");
+
+                if (WillSuckerPunchTrigger(currentProbablity, randomGenerator))
+                {
+                    Console.WriteLine("Sucker Punch accidentially triggered! Game ends.");
+                    enemySurrendered = true;
+                    youSurrendered = true;
+                }
+            }
+
+            turnCounter += 1;
         }
-    }
-
-    else if (data == "F")
-    {
-        Console.WriteLine("The enemy is appeased by your 'gift'. But the masses are upset (lose 5 points).");
-        Console.WriteLine("But sometimes, you must take desperate measures to ensure victory.");
-        totalPoints -= 5;
-        hardlinerProbablity -= 5;
-
-        var success = WillEnemySurrender(hardlinerProbablity, currentProbablity, randomGenerator);
-
-        if (success)
+        else if (data == "D")
         {
-            Console.WriteLine("The enemy buckles under pressure and disbands.");
-            totalPoints += victoryVPs;
-            enemySurrendered = true;
+            Console.WriteLine("Tactical nuclear weapons are deployed. Billions are terminated.");
+            Console.WriteLine("Historians will denounce your actions as a war crime (lose 5 points).");
+            Console.WriteLine("But sometimes, you must take desperate measures to ensure victory.");
+            totalPoints -= 5;
+
+
+            var buckle = WillEnemySurrender(hardlinerProbablity, tacticalWeaponsBonus / 2, randomGenerator);
+
+            if (buckle)
+            {
+                Console.WriteLine("It works! The enemy surrenders!");
+            }
+            else
+            {
+                Console.WriteLine("It didn't work. The enemy shrugged off your actions.");
+            }
+
+
+            currentProbablity += tacticalWeaponsBonus;
+
+            var success = WillEnemySurrender(hardlinerProbablity, currentProbablity, randomGenerator);
+
+            if (success)
+            {
+                Console.WriteLine("The enemy buckles under pressure and disbands.");
+                totalPoints += victoryVPs;
+                enemySurrendered = true;
+            }
+            else
+            {
+                Console.WriteLine("The enemy steels itself for what is to come.");
+
+                var enemyEscalates = EnemyEscalates(randomGenerator);
+
+                currentProbablity += enemyEscalates;
+
+                Console.WriteLine($"Enemy chooses to escalate by {enemyEscalates}%.");
+
+                if (WillSuckerPunchTrigger(currentProbablity, randomGenerator))
+                {
+                    Console.WriteLine("Sucker Punch accidentially triggered! Game ends.");
+                    enemySurrendered = true;
+                    youSurrendered = true;
+                }
+            }
+
+            turnCounter += 1;
+        }
+
+        else if (data == "E")
+        {
+            Console.WriteLine("Strategic nuclear weapons are deployed. Trillions are terminated.");
+            Console.WriteLine("Historians will denounce your actions as a war crime (lose 10 points).");
+            Console.WriteLine("But sometimes, you must take desperate measures to ensure victory.");
+            totalPoints -= 10;
+
+            var buckle = WillEnemySurrender(hardlinerProbablity, strategicWeaponsBonus / 2, randomGenerator);
+
+            if (buckle)
+            {
+                Console.WriteLine("It works! The enemy surrenders!");
+            }
+            else
+            {
+                Console.WriteLine("It didn't work. The enemy shrugged off your actions.");
+            }
+
+
+            currentProbablity += strategicWeaponsBonus;
+
+            var success = WillEnemySurrender(hardlinerProbablity, currentProbablity, randomGenerator);
+
+            if (success)
+            {
+                Console.WriteLine("The enemy buckles under pressure and disbands.");
+                totalPoints += victoryVPs;
+                enemySurrendered = true;
+            }
+            else
+            {
+                Console.WriteLine("The enemy steels itself for what is to come.");
+
+                var enemyEscalates = EnemyEscalates(randomGenerator);
+
+                currentProbablity += enemyEscalates;
+
+                Console.WriteLine($"Enemy chooses to escalate by #{enemyEscalates}%.");
+
+                if (WillSuckerPunchTrigger(currentProbablity, randomGenerator))
+                {
+                    Console.WriteLine("Sucker Punch accidentially triggered! Game ends.");
+                    enemySurrendered = true;
+                    youSurrendered = true;
+                }
+            }
+
+            turnCounter += 1;
+        }
+
+        else if (data == "F")
+        {
+            Console.WriteLine("The enemy is appeased by your 'gift'. But the masses are upset (lose 5 points).");
+            Console.WriteLine("But sometimes, you must take desperate measures to ensure victory.");
+            totalPoints -= 5;
+            hardlinerProbablity -= 5;
+
+            var success = WillEnemySurrender(hardlinerProbablity, currentProbablity, randomGenerator);
+
+            if (success)
+            {
+                Console.WriteLine("The enemy buckles under pressure and disbands.");
+                totalPoints += victoryVPs;
+                enemySurrendered = true;
+            }
+            else
+            {
+                Console.WriteLine("The enemy steels itself for what is to come.");
+
+                var enemyEscalates = EnemyEscalates(randomGenerator);
+
+                currentProbablity += enemyEscalates;
+
+                Console.WriteLine($"Enemy chooses to escalate by {enemyEscalates}%.");
+
+                if (WillSuckerPunchTrigger(currentProbablity, randomGenerator))
+                {
+                    Console.WriteLine("Sucker Punch accidentially triggered! Game ends.");
+                    enemySurrendered = true;
+                    youSurrendered = true;
+                }
+            }
+
+            turnCounter += 1;
         }
         else
         {
-            Console.WriteLine("The enemy steels itself for what is to come.");
-
-            var enemyEscalates = EnemyEscalates(randomGenerator);
-
-            currentProbablity += enemyEscalates;
-
-            Console.WriteLine($"Enemy chooses to escalate by {enemyEscalates}%.");
-
-            if (WillSuckerPunchTrigger(currentProbablity, randomGenerator))
-            {
-                Console.WriteLine("Sucker Punch accidentially triggered! Game ends.");
-                enemySurrendered = true;
-                youSurrendered = true;
-            }
+            Console.WriteLine("Invalid entry!");
         }
-    }
-    else
-    {
-        Console.WriteLine("Invalid entry!");
     }
 }
 
