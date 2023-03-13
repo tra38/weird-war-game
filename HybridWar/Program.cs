@@ -357,20 +357,12 @@ while (CrisisContinues(enemySurrendered, youSurrendered))
         Console.WriteLine($"Chances of Nuclear War {currentProbablity}%");
         Console.WriteLine();
         Console.WriteLine($"Options for the {govPrefix} {govType} of Terra:");
-        Console.WriteLine($"(A) Surrender: Lose {costToSurrender} points.");
-
-        if (costToSurrender <= 5)
-        {
-            Console.WriteLine($"(The {alienName} no longer wishes to negotiate with you. They have made their demands clear and have compromised their ideals to accomdate your society. Accept or else.)");
-        }
-        else
-        {
-            Console.WriteLine($"(B) Negotiate A Favorable Settlement (Success: {negotiationOdds}%), reducing the costs to surrender by 5 points.");
-        }
+        Console.WriteLine($"(A) Unconditional Surrender: War ends and you lose {costToSurrender} points.");
+        Console.WriteLine($"(B) Offer A Conditional Surrender (Success: {negotiationOdds}%. If the enemy accepts your offer, war ends and you'll lose {costToSurrender-5} points instead.)");
         Console.WriteLine($"(C) Unconventional Warfare (Chance of Immediate Enemy Surrender: {(economicBlockade / 4)}%. Increases probablity of nuclear war by {economicBlockade}%. No VP loss)");
         Console.WriteLine($"(D) Tactical Nuclear Weapons (Chance of Immediate Enemy Surrender: {(tacticalWeaponsBonus / 2)}%. Increases probablity of nuclear war by {tacticalWeaponsBonus}%, lose 5 VP)");
         Console.WriteLine($"(E) Strategic Nuclear Weapons (Chance of Immediate Enemy Surrender: {strategicWeaponsBonus / 2}%. Increases probablity of nuclear war by {strategicWeaponsBonus}%, lose 10 VP)");
-        Console.WriteLine($"(F) Appeasement (reduce enemy tolerance by {negotiationOdds / 4}%, lose 5 VP)");
+        Console.WriteLine($"(F) Appeasement (reduce enemy tolerance by {negotiationOdds / 4}%, lose {costToSurrender/5} VP)");
 
         var data = Console.ReadLine();
 
@@ -397,26 +389,27 @@ while (CrisisContinues(enemySurrendered, youSurrendered))
                 {
                     Console.WriteLine("Enemy is willing to compromise on key points, providing you a face-saving measure. Victory with honor.");
                     costToSurrender -= 5;
+                    youSurrendered = true;
                 }
 
                 else
                 {
                     Console.WriteLine("But talks deadlock and nothing happens.");
+
+                    var enemyEscalates = EnemyEscalates(randomGenerator);
+
+                    currentProbablity += enemyEscalates;
+
+                    Console.WriteLine("Enemy engages in aggressive actions to 'persuade' you to accept peace on their terms.");
+                    Console.WriteLine($"Enemy chooses to escalate by {enemyEscalates}%.");
+
+                    if (WillSuckerPunchTrigger(currentProbablity, randomGenerator))
+                    {
+                        Console.WriteLine("Sucker Punch accidentially triggered! Game ends.");
+                        enemySurrendered = true;
+                        youSurrendered = true;
+                    }
                 }
-            }
-
-            var enemyEscalates = EnemyEscalates(randomGenerator);
-
-            currentProbablity += enemyEscalates;
-
-            Console.WriteLine("Enemy engages in aggressive actions to 'persuade' you to accept peace on their terms.");
-            Console.WriteLine($"Enemy chooses to escalate by {enemyEscalates}%.");
-
-            if (WillSuckerPunchTrigger(currentProbablity, randomGenerator))
-            {
-                Console.WriteLine("Sucker Punch accidentially triggered! Game ends.");
-                enemySurrendered = true;
-                youSurrendered = true;
             }
 
             turnCounter += 1;
@@ -568,9 +561,10 @@ while (CrisisContinues(enemySurrendered, youSurrendered))
 
         else if (data == "F")
         {
-            Console.WriteLine("The enemy is appeased by your 'gift'. But the masses are upset (lose 5 points).");
+            var appeasementCost = costToSurrender / 5;
+            Console.WriteLine($"The enemy is appeased by your 'gift'. But the masses are upset (lose {appeasementCost} points).");
             Console.WriteLine("But sometimes, you must take desperate measures to ensure victory.");
-            totalPoints -= 5;
+            totalPoints -= appeasementCost;
             hardlinerProbablity -= (negotiationOdds/4);
 
             var success = WillEnemySurrender(hardlinerProbablity, currentProbablity, randomGenerator);
