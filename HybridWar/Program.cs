@@ -5,17 +5,27 @@
 
 using HybridWar;
 
-Console.WriteLine("'Our sacred defense is their barbaric aggression.'--President Zhu Huang, Terra");
+//https://social.msdn.microsoft.com/Forums/vstudio/en-US/518bd41d-f344-4e00-b530-9fbea5c0b867/quottypewriterquot-like-effect-in-a-c-console-application?forum=csharpgeneral
+void TypewriterEffect(string text)
+{
+    for (int i = 0; i < text.Length; i++)
 
-Console.WriteLine("Fifty years after the unification of Terra under President Zhu Huang, the Transcendants arrived.");
-Console.WriteLine("They offer enlightenment. We refuse. We now wage a war against these aliens, for our very survival.");
-Console.WriteLine("Yet, how do we wage such a war? Especially when it could lead to extiniction to both our sides?");
+    {
+        Console.Write(text[i]);
+        Thread.Sleep(10);
+    }
+}
+
+TypewriterEffect("'Our sacred defense is their barbaric aggression.'--Zhu Huang, Leader of Terra");
 Console.WriteLine();
-
-Console.WriteLine("Do we fight, trying to drag humanity to the brink of extiniction? Or do we negotiate,");
-Console.WriteLine("in an attempt to come to a solution we would both be comfortable with?");
-
-Console.ReadLine();
+TypewriterEffect("Fifty years after the unification of Terra under Zhu Huang, the Transcendants arrived.");
+Console.WriteLine();
+TypewriterEffect("They offer enlightenment. We refuse. We now wage a war against these aliens, for our very survival.");
+Console.WriteLine();
+TypewriterEffect("Yet, how do we wage such a war? Especially when it could lead to extiniction to both our sides?");
+Console.WriteLine();
+TypewriterEffect("Fight? Negotiate for a honorable peace that we can live with? Or appease the Transcendants?");
+Console.WriteLine();
 
 Console.Clear();
 
@@ -58,7 +68,6 @@ void UpdatePlayerStats()
             Console.WriteLine("A side that adopts a theocratic ideology could see a boost in military hard power and");
             Console.WriteLine("cultural soft power, but may struggle with technology and social cohesion due to a focus on religious orthodoxy.");
             Console.ReadLine();
-            Console.WriteLine("");
             generalWeaponsEffectiveness += 10;
             negotiationOdds += 10;
             costToSurrender += 5;
@@ -356,6 +365,7 @@ while (CrisisContinues(enemySurrendered, youSurrendered))
     Console.WriteLine($"(C) Unconventional Warfare (Increases probablity of nuclear war by {economicBlockade}%, no VP loss)");
     Console.WriteLine($"(D) Tactical Nuclear Weapons (Increases probablity of nuclear war by {tacticalWeaponsBonus}%, lose 5 VP)");
     Console.WriteLine($"(E) Strategic Nuclear Weapons (Increases probablity of nuclear war by {strategicWeaponsBonus}%), lose 10 VP)");
+    Console.WriteLine($"(F) Appeasement (reduce enemy tolerance by 5%, lose 5 VP)");
 
     var data = Console.ReadLine();
 
@@ -493,6 +503,40 @@ while (CrisisContinues(enemySurrendered, youSurrendered))
             currentProbablity += enemyEscalates;
 
             Console.WriteLine($"Enemy chooses to escalate by #{enemyEscalates}%.");
+
+            if (WillSuckerPunchTrigger(currentProbablity, randomGenerator))
+            {
+                Console.WriteLine("Sucker Punch accidentially triggered! Game ends.");
+                enemySurrendered = true;
+                youSurrendered = true;
+            }
+        }
+    }
+
+    else if (data == "F")
+    {
+        Console.WriteLine("The enemy is appeased by your 'gift'. But the masses are upset (lose 5 points).");
+        Console.WriteLine("But sometimes, you must take desperate measures to ensure victory.");
+        totalPoints -= 5;
+        hardlinerProbablity -= 5;
+
+        var success = WillEnemySurrender(hardlinerProbablity, currentProbablity, randomGenerator);
+
+        if (success)
+        {
+            Console.WriteLine("The enemy buckles under pressure and disbands.");
+            totalPoints += victoryVPs;
+            enemySurrendered = true;
+        }
+        else
+        {
+            Console.WriteLine("The enemy steels itself for what is to come.");
+
+            var enemyEscalates = EnemyEscalates(randomGenerator);
+
+            currentProbablity += enemyEscalates;
+
+            Console.WriteLine($"Enemy chooses to escalate by {enemyEscalates}%.");
 
             if (WillSuckerPunchTrigger(currentProbablity, randomGenerator))
             {
