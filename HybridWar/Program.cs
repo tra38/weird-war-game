@@ -370,7 +370,7 @@ while (CrisisContinues(enemySurrendered, youSurrendered))
         Console.WriteLine($"(C) Unconventional Warfare (Chance of Immediate Enemy Surrender: {(economicBlockade / 4)}%. Increases probablity of nuclear war by {economicBlockade}%. No VP loss)");
         Console.WriteLine($"(D) Tactical Nuclear Weapons (Chance of Immediate Enemy Surrender: {(tacticalWeaponsBonus / 2)}%. Increases probablity of nuclear war by {tacticalWeaponsBonus}%, lose 5 VP)");
         Console.WriteLine($"(E) Strategic Nuclear Weapons (Chance of Immediate Enemy Surrender: {strategicWeaponsBonus / 2}%. Increases probablity of nuclear war by {strategicWeaponsBonus}%, lose 10 VP)");
-        Console.WriteLine($"(F) Appeasement (reduce enemy tolerance by 5%, lose 5 VP)");
+        Console.WriteLine($"(F) Appeasement (reduce enemy tolerance by {negotiationOdds / 4}%, lose 5 VP)");
 
         var data = Console.ReadLine();
 
@@ -571,7 +571,7 @@ while (CrisisContinues(enemySurrendered, youSurrendered))
             Console.WriteLine("The enemy is appeased by your 'gift'. But the masses are upset (lose 5 points).");
             Console.WriteLine("But sometimes, you must take desperate measures to ensure victory.");
             totalPoints -= 5;
-            hardlinerProbablity -= 5;
+            hardlinerProbablity -= (negotiationOdds/4);
 
             var success = WillEnemySurrender(hardlinerProbablity, currentProbablity, randomGenerator);
 
