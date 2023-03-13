@@ -360,11 +360,11 @@ while (CrisisContinues(enemySurrendered, youSurrendered))
     }
     else
     {
-        Console.WriteLine($"(B) Negotiate A Favorable Settlement (Escalation Risk: Low, Success: {negotiationOdds}%), reducing the costs to surrender by 5 points.");
+        Console.WriteLine($"(B) Negotiate A Favorable Settlement (Success: {negotiationOdds}%), reducing the costs to surrender by 5 points.");
     }
-    Console.WriteLine($"(C) Unconventional Warfare (Increases probablity of nuclear war by {economicBlockade}%, no VP loss)");
-    Console.WriteLine($"(D) Tactical Nuclear Weapons (Increases probablity of nuclear war by {tacticalWeaponsBonus}%, lose 5 VP)");
-    Console.WriteLine($"(E) Strategic Nuclear Weapons (Increases probablity of nuclear war by {strategicWeaponsBonus}%), lose 10 VP)");
+    Console.WriteLine($"(C) Unconventional Warfare (Chance of Immediate Enemy Surrender: {(economicBlockade/4)}%. Increases probablity of nuclear war by {economicBlockade}%. No VP loss)");
+    Console.WriteLine($"(D) Tactical Nuclear Weapons (Chance of Immediate Enemy Surrender: {(tacticalWeaponsBonus/2)}%. Increases probablity of nuclear war by {tacticalWeaponsBonus}%, lose 5 VP)");
+    Console.WriteLine($"(E) Strategic Nuclear Weapons (Chance of Immediate Enemy Surrender: {strategicWeaponsBonus/2}%. Increases probablity of nuclear war by {strategicWeaponsBonus}%, lose 10 VP)");
     Console.WriteLine($"(F) Appeasement (reduce enemy tolerance by 5%, lose 5 VP)");
 
     var data = Console.ReadLine();
@@ -398,7 +398,6 @@ while (CrisisContinues(enemySurrendered, youSurrendered))
             }
         }
 
-
         var enemyEscalates = EnemyEscalates(randomGenerator);
 
         currentProbablity += enemyEscalates;
@@ -416,6 +415,18 @@ while (CrisisContinues(enemySurrendered, youSurrendered))
     else if (data == "C")
     {
         Console.WriteLine("You attempt to hurt their economy through conventional means and economic might.");
+
+        var buckle = WillEnemySurrender(hardlinerProbablity, economicBlockade/4, randomGenerator);
+
+        if (buckle)
+        {
+            Console.WriteLine("It works! The enemy surrenders!");
+        }
+        else
+        {
+            Console.WriteLine("It didn't work. The enemy shrugged off your actions.");
+        }
+
         currentProbablity += economicBlockade;
         var success = WillEnemySurrender(hardlinerProbablity, currentProbablity, randomGenerator);
 
@@ -449,6 +460,20 @@ while (CrisisContinues(enemySurrendered, youSurrendered))
         Console.WriteLine("Historians will denounce your actions as a war crime (lose 5 points).");
         Console.WriteLine("But sometimes, you must take desperate measures to ensure victory.");
         totalPoints -= 5;
+
+
+        var buckle = WillEnemySurrender(hardlinerProbablity, tacticalWeaponsBonus / 2, randomGenerator);
+
+        if (buckle)
+        {
+            Console.WriteLine("It works! The enemy surrenders!");
+        }
+        else
+        {
+            Console.WriteLine("It didn't work. The enemy shrugged off your actions.");
+        }
+
+
         currentProbablity += tacticalWeaponsBonus;
 
         var success = WillEnemySurrender(hardlinerProbablity, currentProbablity, randomGenerator);
@@ -484,6 +509,19 @@ while (CrisisContinues(enemySurrendered, youSurrendered))
         Console.WriteLine("Historians will denounce your actions as a war crime (lose 10 points).");
         Console.WriteLine("But sometimes, you must take desperate measures to ensure victory.");
         totalPoints -= 10;
+
+        var buckle = WillEnemySurrender(hardlinerProbablity, strategicWeaponsBonus / 2, randomGenerator);
+
+        if (buckle)
+        {
+            Console.WriteLine("It works! The enemy surrenders!");
+        }
+        else
+        {
+            Console.WriteLine("It didn't work. The enemy shrugged off your actions.");
+        }
+
+
         currentProbablity += strategicWeaponsBonus;
 
         var success = WillEnemySurrender(hardlinerProbablity, currentProbablity, randomGenerator);
