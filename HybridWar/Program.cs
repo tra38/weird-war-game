@@ -345,6 +345,7 @@ while (CrisisContinues(enemySurrendered, youSurrendered))
     if (WillEnemySurrender(hardlinerProbablity, currentProbablity, randomGenerator))
     {
         Console.WriteLine("The enemy finally gives up! The percentage chance of nuclear war is too high!");
+        enemySurrendered = true;
     }
     else
     {
@@ -363,6 +364,7 @@ while (CrisisContinues(enemySurrendered, youSurrendered))
         Console.WriteLine($"(D) Tactical Nuclear Weapons (Chance of Immediate Enemy Surrender: {(tacticalWeaponsBonus / 2)}%. Increases probablity of nuclear war by {tacticalWeaponsBonus}%, lose 5 VP)");
         Console.WriteLine($"(E) Strategic Nuclear Weapons (Chance of Immediate Enemy Surrender: {strategicWeaponsBonus / 2}%. Increases probablity of nuclear war by {strategicWeaponsBonus}%, lose 10 VP)");
         Console.WriteLine($"(F) Appeasement (reduce enemy tolerance by {negotiationOdds / 4}%, lose {costToSurrender/5} VP)");
+        Console.WriteLine($"(G) Conventional Warfare (Success: {economicBlockade}%. Reduces enemy tolerance by {economicBlockade / 4}%, and temporarily blocks Transcendant escalation.)");
 
         var data = Console.ReadLine();
 
@@ -389,6 +391,7 @@ while (CrisisContinues(enemySurrendered, youSurrendered))
                 {
                     Console.WriteLine("Enemy is willing to compromise on key points, providing you a face-saving measure. Victory with honor.");
                     costToSurrender -= 5;
+                    totalPoints -= costToSurrender;
                     youSurrendered = true;
                 }
 
@@ -565,7 +568,7 @@ while (CrisisContinues(enemySurrendered, youSurrendered))
             Console.WriteLine($"The enemy is appeased by your 'gift'. But the masses are upset (lose {appeasementCost} points).");
             Console.WriteLine("But sometimes, you must take desperate measures to ensure victory.");
             totalPoints -= appeasementCost;
-            hardlinerProbablity -= (negotiationOdds/4);
+            hardlinerProbablity -= (negotiationOdds / 4);
 
             var success = WillEnemySurrender(hardlinerProbablity, currentProbablity, randomGenerator);
 
@@ -578,6 +581,38 @@ while (CrisisContinues(enemySurrendered, youSurrendered))
             else
             {
                 Console.WriteLine("The enemy steels itself for what is to come.");
+
+                var enemyEscalates = EnemyEscalates(randomGenerator);
+
+                currentProbablity += enemyEscalates;
+
+                Console.WriteLine($"Enemy chooses to escalate by {enemyEscalates}%.");
+
+                if (WillSuckerPunchTrigger(currentProbablity, randomGenerator))
+                {
+                    Console.WriteLine("Sucker Punch accidentially triggered! Game ends.");
+                    enemySurrendered = true;
+                    youSurrendered = true;
+                }
+            }
+
+            turnCounter += 1;
+        }
+        else if (data == "G")
+        {
+
+            Console.WriteLine("You conduct a conventional war campaign against the enemy.");
+            var negotiationSuccess = WillEnemyNegotiate(economicBlockade, randomGenerator);
+
+            if (negotiationSuccess)
+            {
+                Console.WriteLine("The skrimishes has gone in your favor.");
+                Console.WriteLine("The enemy regroups. The call from doves to negotiate grows louder.");
+                hardlinerProbablity -= economicBlockade/4;
+            }
+            else
+            {
+                Console.WriteLine("The skrimishes has failed to go in your favor - the enemy pushes its advantage.");
 
                 var enemyEscalates = EnemyEscalates(randomGenerator);
 
