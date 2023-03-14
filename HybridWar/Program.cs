@@ -359,6 +359,8 @@ while (CrisisContinues(enemySurrendered, youSurrendered))
         Console.WriteLine();
         Console.WriteLine($"Options for the {govPrefix} {govType} of Terra:");
         Console.WriteLine($"(A) Unconditional Surrender: War ends and you lose {costToSurrender} points.");
+        //remove "offer a conditional surrender", as "appeasement" does the same thing but offer finer control? Consider the option.
+        //Maybe, maybe appeasement reduces the 'cost to surrender' - you already surrendered some stuff, so cheaper to surrender the rest!
         Console.WriteLine($"(B) Offer A Conditional Surrender (Success: {negotiationOdds}%. If the enemy accepts your offer, war ends and you'll lose {costToSurrender-5} points instead.)");
         Console.WriteLine($"(C) Unconventional Warfare (Chance of Immediate Enemy Surrender: {(economicBlockade / 4)}%. Increases probablity of nuclear war by {economicBlockade}%. No VP loss)");
         Console.WriteLine($"(D) Tactical Nuclear Weapons (Chance of Immediate Enemy Surrender: {(tacticalWeaponsBonus / 2)}%. Increases probablity of nuclear war by {tacticalWeaponsBonus}%, lose 5 VP)");
