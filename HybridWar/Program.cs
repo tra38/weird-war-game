@@ -4,6 +4,7 @@
 //https://globalaffairs-ru.translate.goog/articles/ih-varvarskaya-agressiya/?_x_tr_sl=ru&_x_tr_tl=en&_x_tr_hl=en&_x_tr_pto=wapp
 
 using HybridWar;
+using System;
 
 //https://social.msdn.microsoft.com/Forums/vstudio/en-US/518bd41d-f344-4e00-b530-9fbea5c0b867/quottypewriterquot-like-effect-in-a-c-console-application?forum=csharpgeneral
 void TypewriterEffect(string text)
@@ -16,16 +17,23 @@ void TypewriterEffect(string text)
     }
 }
 
-TypewriterEffect("'Our sacred defense is their barbaric aggression.'--Zhu Huang, Leader of Terra");
-Console.WriteLine();
-TypewriterEffect("Fifty years after the unification of Terra under Zhu Huang, the Transcendants arrived.");
-Console.WriteLine();
-TypewriterEffect("They offer enlightenment. We refuse. We now wage a war against these aliens, for our very survival.");
-Console.WriteLine();
-TypewriterEffect("Yet, how do we wage such a war? Especially when it could lead to extiniction to both our sides?");
-Console.WriteLine();
-TypewriterEffect("Fight? Negotiate for a honorable peace that we can live with? Or appease the Transcendants?");
-Console.WriteLine();
+void TypeWriterEffect(List<string> strings)
+{
+    foreach (var item in strings)
+    {
+        TypewriterEffect(item);
+        Console.WriteLine();
+    }
+}
+
+TypeWriterEffect(new List<string>
+{
+    "'Our sacred defense is their barbaric aggression.'--Zhu Huang, Leader of Terra",
+    "Fifty years after the unification of Terra under Zhu Huang, the Transcendants arrived.",
+    "They offer enlightenment. We refuse. We now wage a war against these aliens, for our very survival.",
+    "Yet, how do we wage such a war? Especially when it could lead to extiniction to both our sides?",
+    "Fight? Appease? Or both?"
+});
 
 Console.Clear();
 
@@ -253,7 +261,7 @@ void GenerateSurrenderCostReduction(int defaultValue, int currentValue)
     }
     else
     {
-        Console.WriteLine($"Your socail cohesion is average, so your cost of surrender stays at {defaultValue}.");
+        Console.WriteLine($"Your social cohesion is average, so your cost of surrender stays at {defaultValue}.");
     }
 }
 
@@ -347,7 +355,7 @@ static int EnemyEscalates(Random random)
     return RandomNumber(1, 25, random);
 }
 
-static (int, bool, bool) EnemyMoves(Random randomGenerator, int currentProbablity, bool enemySurrendered, bool youSurrendered)
+static (int, bool, bool, int, int, int) EnemyMoves(Random randomGenerator, int currentProbablity, bool enemySurrendered, bool youSurrendered, int economicBlockade, int negotiationOdds, int generalWeaponsEffectiveness)
 {
     var enemyEscalates = EnemyEscalates(randomGenerator);
 
@@ -356,6 +364,23 @@ static (int, bool, bool) EnemyMoves(Random randomGenerator, int currentProbablit
     Console.WriteLine("Enemy engages in aggressive actions to 'persuade' you to accept peace on their terms.");
     Console.WriteLine($"Enemy chooses to escalate by {enemyEscalates}%.");
 
+    var target = RandomNumber(1, 3, randomGenerator);
+    if (target == 1)
+    {
+        economicBlockade -= 10;
+        Console.WriteLine("The enemy targets factories; damaging your economic blockade capability by 5 points!");
+    }
+    else if (target == 2)
+    {
+        negotiationOdds -= 10;
+        Console.WriteLine("The enemy targets diplomatic embassies, damaging your negotiation abilities by 5 points!");
+    }
+    else
+    {
+        generalWeaponsEffectiveness -= 10;
+        Console.WriteLine("The enemy targets your nuclear silos, damaging your military effectiveness by 5 points!");
+    }
+
     if (WillSuckerPunchTrigger(currentProbablity, randomGenerator))
     {
         Console.WriteLine("Sucker Punch accidentially triggered! Game ends.");
@@ -363,13 +388,15 @@ static (int, bool, bool) EnemyMoves(Random randomGenerator, int currentProbablit
         youSurrendered = true;
     }
 
-    return (currentProbablity, enemySurrendered, youSurrendered);
+    return (currentProbablity, enemySurrendered, youSurrendered, economicBlockade, negotiationOdds, generalWeaponsEffectiveness);
 }
 
 
 while (CrisisContinues(enemySurrendered, youSurrendered))
 {
-    if (WillEnemySurrender(hardlinerProbablity, currentProbablity))
+    if (enemySurrendered)
+    { }
+    else if (WillEnemySurrender(hardlinerProbablity, currentProbablity))
     {
         Console.WriteLine("The enemy finally gives up! The percentage chance of nuclear war is too high!");
         enemySurrendered = true;
@@ -385,58 +412,43 @@ while (CrisisContinues(enemySurrendered, youSurrendered))
         Console.WriteLine($"Chances of Nuclear War {currentProbablity}%");
         Console.WriteLine();
         Console.WriteLine($"Options for the {govPrefix} {govType} of Terra:");
-        Console.WriteLine($"(A) Unconditional Surrender: War ends and you lose {costToSurrender} points.");
-        Console.WriteLine($"(B) Offer A Conditional Surrender (Success: {negotiationOdds}%. If the enemy accepts your offer, war ends and you'll lose {costToSurrender-5} points instead.)");
-        Console.WriteLine($"(C) Unconventional Warfare (Chance of Immediate Enemy Surrender: {(economicBlockade / 4)}%. Increases probablity of nuclear war by {economicBlockade}%. No VP loss)");
-        Console.WriteLine($"(D) Tactical Nuclear Weapons (Chance of Immediate Enemy Surrender: {(tacticalWeaponsBonus / 2)}%. Increases probablity of nuclear war by {tacticalWeaponsBonus}%, lose 5 VP)");
-        Console.WriteLine($"(E) Strategic Nuclear Weapons (Chance of Immediate Enemy Surrender: {strategicWeaponsBonus / 2}%. Increases probablity of nuclear war by {strategicWeaponsBonus}%, lose 10 VP)");
-        Console.WriteLine($"(F) Appeasement (reduce enemy tolerance by {negotiationOdds / 4}%, lose {costToSurrender/5} VP)");
-        Console.WriteLine($"(G) Conventional Warfare (Success: {economicBlockade}%. Reduces enemy tolerance by {economicBlockade / 4}%, and temporarily blocks Transcendant escalation.)");
+        Console.WriteLine($"(A) Conventional Warfare (Success: {economicBlockade}%. Reduces enemy tolerance by {economicBlockade / 4}%, and temporarily blocks Transcendant escalation.)");
+        Console.WriteLine($"(B) Unconventional Warfare (Chance of Immediate Enemy Surrender: {economicBlockade / 4}%. Increases probablity of nuclear war by {economicBlockade}%. No VP loss)");
+        Console.WriteLine($"(C) Tactical Nuclear Weapons (Chance of Immediate Enemy Surrender: {(generalWeaponsEffectiveness + tacticalWeaponsBonus) / 2}%. Increases probablity of nuclear war by {generalWeaponsEffectiveness + tacticalWeaponsBonus}%, lose 5 VP)");
+        Console.WriteLine($"(D) Strategic Nuclear Weapons (Chance of Immediate Enemy Surrender: {(generalWeaponsEffectiveness + strategicWeaponsBonus)/ 2}%. Increases probablity of nuclear war by {generalWeaponsEffectiveness + strategicWeaponsBonus}%, lose 10 VP)");
+        Console.WriteLine($"(E) Appeasement (reduce enemy tolerance by {negotiationOdds / 4}%, lose {costToSurrender/5} VP)");
 
         var data = Console.ReadLine();
 
         if (data == "A")
         {
-            Console.WriteLine($"The war is over! You have abdicated and allowed the {alienName} to take power.");
-            totalPoints -= costToSurrender;
-            youSurrendered = true;
+
+            Console.WriteLine("You conduct a conventional war campaign against the enemy.");
+            var negotiationSuccess = WillEnemyNegotiate(economicBlockade, randomGenerator);
+
+            if (negotiationSuccess)
+            {
+                Console.WriteLine("The skrimishes has gone in your favor.");
+                Console.WriteLine("The enemy regroups. The call from doves to negotiate grows louder.");
+                hardlinerProbablity -= economicBlockade / 4;
+            }
+            else
+            {
+                Console.WriteLine("The skrimishes has failed to go in your favor - the enemy pushes its advantage.");
+
+                var tuple = EnemyMoves(randomGenerator, currentProbablity, enemySurrendered, youSurrendered, economicBlockade, negotiationOdds, generalWeaponsEffectiveness);
+
+                currentProbablity = tuple.Item1;
+                enemySurrendered = tuple.Item2;
+                youSurrendered = tuple.Item3;
+                economicBlockade = tuple.Item4;
+                negotiationOdds = tuple.Item5;
+                generalWeaponsEffectiveness = tuple.Item6;
+            }
 
             turnCounter += 1;
         }
         else if (data == "B")
-        {
-            if (costToSurrender <= 5)
-            {
-                Console.WriteLine("You send a message to the enemy, but the enemy does not respond");
-            }
-            else
-            {
-                Console.WriteLine("Diplomats conduct franctic negotiations to try to end the fighting.");
-                var negotiationSuccess = WillEnemyNegotiate(negotiationOdds, randomGenerator);
-
-                if (negotiationSuccess)
-                {
-                    Console.WriteLine("Enemy is willing to compromise on key points, providing you a face-saving measure. Victory with honor.");
-                    costToSurrender -= 5;
-                    totalPoints -= costToSurrender;
-                    youSurrendered = true;
-                }
-
-                else
-                {
-                    Console.WriteLine("But talks deadlock and nothing happens.");
-
-                    var tuple = EnemyMoves(randomGenerator, currentProbablity, enemySurrendered, youSurrendered);
-
-                    currentProbablity = tuple.Item1;
-                    enemySurrendered = tuple.Item2;
-                    youSurrendered = tuple.Item3;
-                }
-            }
-
-            turnCounter += 1;
-        }
-        else if (data == "C")
         {
             Console.WriteLine("You attempt to hurt their economy through conventional means and economic might.");
 
@@ -464,16 +476,19 @@ while (CrisisContinues(enemySurrendered, youSurrendered))
             {
                 Console.WriteLine("The enemy steels itself for what is to come.");
 
-                var tuple = EnemyMoves(randomGenerator, currentProbablity, enemySurrendered, youSurrendered);
+                var tuple = EnemyMoves(randomGenerator, currentProbablity, enemySurrendered, youSurrendered, economicBlockade, negotiationOdds, generalWeaponsEffectiveness);
 
                 currentProbablity = tuple.Item1;
                 enemySurrendered = tuple.Item2;
                 youSurrendered = tuple.Item3;
+                economicBlockade = tuple.Item4;
+                negotiationOdds = tuple.Item5;
+                generalWeaponsEffectiveness = tuple.Item6;
             }
 
             turnCounter += 1;
         }
-        else if (data == "D")
+        else if (data == "C")
         {
             Console.WriteLine("Tactical nuclear weapons are deployed. Billions are terminated.");
             Console.WriteLine("Historians will denounce your actions as a war crime (lose 5 points).");
@@ -481,7 +496,7 @@ while (CrisisContinues(enemySurrendered, youSurrendered))
             totalPoints -= 5;
 
 
-            var buckle = WillEnemyAutoSurrender(randomGenerator, tacticalWeaponsBonus / 2);
+            var buckle = WillEnemyAutoSurrender(randomGenerator, (generalWeaponsEffectiveness + tacticalWeaponsBonus) / 2);
 
             if (buckle)
             {
@@ -506,24 +521,27 @@ while (CrisisContinues(enemySurrendered, youSurrendered))
             {
                 Console.WriteLine("The enemy steels itself for what is to come.");
 
-                var tuple = EnemyMoves(randomGenerator, currentProbablity, enemySurrendered, youSurrendered);
+                var tuple = EnemyMoves(randomGenerator, currentProbablity, enemySurrendered, youSurrendered, economicBlockade, negotiationOdds, generalWeaponsEffectiveness);
 
                 currentProbablity = tuple.Item1;
                 enemySurrendered = tuple.Item2;
                 youSurrendered = tuple.Item3;
+                economicBlockade = tuple.Item4;
+                negotiationOdds = tuple.Item5;
+                generalWeaponsEffectiveness = tuple.Item6;
             }
 
             turnCounter += 1;
         }
 
-        else if (data == "E")
+        else if (data == "D")
         {
             Console.WriteLine("Strategic nuclear weapons are deployed. Trillions are terminated.");
             Console.WriteLine("Historians will denounce your actions as a war crime (lose 10 points).");
             Console.WriteLine("But sometimes, you must take desperate measures to ensure victory.");
             totalPoints -= 10;
 
-            var buckle = WillEnemyAutoSurrender(randomGenerator, strategicWeaponsBonus / 2);
+            var buckle = WillEnemyAutoSurrender(randomGenerator, (generalWeaponsEffectiveness + strategicWeaponsBonus) / 2);
 
             if (buckle)
             {
@@ -549,17 +567,20 @@ while (CrisisContinues(enemySurrendered, youSurrendered))
             {
                 Console.WriteLine("The enemy steels itself for what is to come.");
 
-                var tuple = EnemyMoves(randomGenerator, currentProbablity, enemySurrendered, youSurrendered);
+                var tuple = EnemyMoves(randomGenerator, currentProbablity, enemySurrendered, youSurrendered, economicBlockade, negotiationOdds, generalWeaponsEffectiveness);
 
                 currentProbablity = tuple.Item1;
                 enemySurrendered = tuple.Item2;
                 youSurrendered = tuple.Item3;
+                economicBlockade = tuple.Item4;
+                negotiationOdds = tuple.Item5;
+                generalWeaponsEffectiveness = tuple.Item6;
             }
 
             turnCounter += 1;
         }
 
-        else if (data == "F")
+        else if (data == "E")
         {
             var appeasementCost = costToSurrender / 5;
             Console.WriteLine($"The enemy is appeased by your 'gift'. But the masses are upset (lose {appeasementCost} points).");
@@ -579,36 +600,14 @@ while (CrisisContinues(enemySurrendered, youSurrendered))
             {
                 Console.WriteLine("The enemy steels itself for what is to come.");
 
-                var tuple = EnemyMoves(randomGenerator, currentProbablity, enemySurrendered, youSurrendered);
+                var tuple = EnemyMoves(randomGenerator, currentProbablity, enemySurrendered, youSurrendered, economicBlockade, negotiationOdds, generalWeaponsEffectiveness);
 
                 currentProbablity = tuple.Item1;
                 enemySurrendered = tuple.Item2;
                 youSurrendered = tuple.Item3;
-            }
-
-            turnCounter += 1;
-        }
-        else if (data == "G")
-        {
-
-            Console.WriteLine("You conduct a conventional war campaign against the enemy.");
-            var negotiationSuccess = WillEnemyNegotiate(economicBlockade, randomGenerator);
-
-            if (negotiationSuccess)
-            {
-                Console.WriteLine("The skrimishes has gone in your favor.");
-                Console.WriteLine("The enemy regroups. The call from doves to negotiate grows louder.");
-                hardlinerProbablity -= economicBlockade/4;
-            }
-            else
-            {
-                Console.WriteLine("The skrimishes has failed to go in your favor - the enemy pushes its advantage.");
-
-                var tuple = EnemyMoves(randomGenerator, currentProbablity, enemySurrendered, youSurrendered);
-
-                currentProbablity = tuple.Item1;
-                enemySurrendered = tuple.Item2;
-                youSurrendered = tuple.Item3;
+                economicBlockade = tuple.Item4;
+                negotiationOdds = tuple.Item5;
+                generalWeaponsEffectiveness = tuple.Item6;
             }
 
             turnCounter += 1;
